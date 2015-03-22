@@ -13,9 +13,11 @@ class Restaurant
   field :location, :type => Array
   field :maps_link, :type => String
 
+  belongs_to :wunderlist_restaurant
+
   # index [[ :location, Mongo::GEO2D ]], min: -200.0, max: 200.0
 
-  def populateFromGooglePlacesDetail(detail)
+  def populate_from_google_places_detail(detail)
     self.name = detail["name"]
     self.address = detail["formatted_address"]
     self.telephone = detail["formatted_phone_number"]
