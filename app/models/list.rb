@@ -4,4 +4,6 @@ class List
 
   field :name, :type => String
   field :wunderlist_id, :type => String
+
+  has_many :wunderlist_restaurants
 end
