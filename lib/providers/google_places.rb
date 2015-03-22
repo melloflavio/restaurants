@@ -25,6 +25,7 @@ module GooglePlaces
     params["rankby"] = "prominence" #The search is for restaurants in a large area. Better to rank by prominence than radius
     params["name"] = restaurantName
     params["key"] = GOOGLE_API_KEY
+    params["language"] = "pt-BR"
 
     response = RestClient.get url, {:params => params}
     parsed = JSON.parse(response)
@@ -38,6 +39,7 @@ module GooglePlaces
     params = Hash.new
     params["placeid"] = restaurantId
     params["key"] = GOOGLE_API_KEY
+    params["language"] = "pt-BR"
 
     response = RestClient.get url, {:params => params}
     parsed = JSON.parse(response)
