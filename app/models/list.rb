@@ -16,6 +16,7 @@ class List
       if !new_rest
         new_rest = WunderlistRestaurant.new
         new_rest.populate_from_wunderlist_api(r)
+        self.wunderlist_restaurants << new_rest
         new_rest.save
       end
 

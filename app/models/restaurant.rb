@@ -31,4 +31,5 @@ class Restaurant
     self.maps_link = "http://maps.google.com/maps?daddr=#{self.latitude},#{self.longitude} (#{self.name})"
   end
 
+
 end
