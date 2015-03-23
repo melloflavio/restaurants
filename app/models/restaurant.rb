@@ -12,6 +12,7 @@ class Restaurant
   field :longitude, :type => String
   field :location, :type => Array
   field :maps_link, :type => String
+  field :sent_to_wunderlist, :type => Boolean, :default => false
 
   belongs_to :wunderlist_restaurant
 
