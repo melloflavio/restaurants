@@ -1,7 +1,6 @@
 class List
   include Mongoid::Document
   include Mongoid::Timestamps
-  load "#{Rails.root}/lib/providers/wunderlist.rb"
 
   field :name, :type => String
   field :wunderlist_id, :type => String

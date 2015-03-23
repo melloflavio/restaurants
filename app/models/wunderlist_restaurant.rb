@@ -1,7 +1,6 @@
 class WunderlistRestaurant
   include Mongoid::Document
   include Mongoid::Timestamps
-  load "#{Rails.root}/lib/providers/google_places.rb"
 
   field :name, :type => String
   field :wunderlist_id, :type => String

@@ -1,3 +1,4 @@
+# encoding: utf-8
 class Restaurant
   include Mongoid::Document
   include Mongoid::Timestamps
@@ -28,8 +29,30 @@ class Restaurant
     self.latitude = detail["geometry"]["location"]["lat"]
     self.longitude = detail["geometry"]["location"]["lng"]
     self.location = [self.latitude, self.longitude]
-    self.maps_link = "http://maps.google.com/maps?daddr=#{self.latitude},#{self.longitude} (#{self.name})"
+    self.maps_link = URI::encode("http://maps.google.com/maps?daddr=#{self.latitude},#{self.longitude} (#{self.name})")
   end
 
+  def send_comment_to_wunderlist
+    begin
+      Wunderlist::create_comment_on_task(self.wunderlist_restaurant.wunderlist_id.to_i, self.get_comment_string)
+      self.sent_to_wunderlist = true
+      self.save
+    rescue Exception => ex
+      puts "Error when sending restaurant #{self.name} to wunderlist: #{ex.message}"
+    end
+
+  end
+
+  def get_comment_string
+    details = Array.new
+    details << "Nome: #{self.name}"
+    details << "Endereço: #{self.address}"
+    details << "Telefone: #{self.telephone}"
+    details << "Maps: #{self.maps_link}"
+    details << "Horário: #{self.hours}"
+    details << "Website: #{self.website}"
+
+    return details.join("\n")
+  end
 
 end

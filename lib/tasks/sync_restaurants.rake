@@ -19,4 +19,13 @@ namespace :wunderlist_restaurants do
     puts "Finished update from google"
   end
 
+  task :send_restaurants_details_to_wunderlist => :environment do
+    puts "Sending comments back to wunderlist"
+    restaurants = Restaurant.where(:sent_to_wunderlist => false)
+    restaurants.each do |r|
+      r.send_comment_to_wunderlist
+    end
+    puts "Finished comments back to wunderlist"
+  end
+
 end
