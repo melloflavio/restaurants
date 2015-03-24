@@ -21,7 +21,7 @@ class WunderlistRestaurant
     results = GooglePlaces::search_for_restaurant_name(self.name, self.list.search_latitude, self.list.search_longitude, self.list.search_radius)
     results = results[0..MAXIMUM_RESULTS]
     results.each do |r|
-      new_rest_detail = WunderlistRestaurant.where(:wunderlist_id => r["place_id"]).first
+      new_rest_detail = Restaurant.where(:place_id => r["place_id"]).first
       if !new_rest_detail
         new_rest_detail = Restaurant.new
         detail = GooglePlaces::search_for_restaurant_detail(r["place_id"])
