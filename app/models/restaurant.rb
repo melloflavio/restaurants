@@ -24,12 +24,14 @@ class Restaurant
     self.address = detail["formatted_address"]
     self.telephone = detail["formatted_phone_number"]
     self.website = detail["website"]
-    self.hours = detail["weekday_text"]
+    self.hours = detail.key?("opening_hours") ? detail["opening_hours"]["weekday_text"] : ""
     self.place_id = detail["place_id"]
-    self.latitude = detail["geometry"]["location"]["lat"]
-    self.longitude = detail["geometry"]["location"]["lng"]
+    self.latitude = (detail.key?("geometry") && detail["geometry"].key?("location")) ? detail["geometry"]["location"]["lat"] : ""
+    self.longitude = (detail.key?("geometry") && detail["geometry"].key?("location")) ?  detail["geometry"]["location"]["lng"] : ""
     self.location = [self.latitude, self.longitude]
-    self.maps_link = URI::encode("http://maps.google.com/maps?daddr=#{self.latitude},#{self.longitude} (#{self.name})")
+    #Encoding the name. The final ) is encoded by hand as %29. If it is not encoded, wunderlist won't recognise it as part of the link
+    #If used URI::Encode on the whole string, %29 gets double encoded as %2529 and it does not work properly
+    self.maps_link = "http://maps.google.com/maps?daddr=#{self.latitude},#{self.longitude}%20(#{URI::encode(self.name)}%29"
   end
 
   def send_comment_to_wunderlist
