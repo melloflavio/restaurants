@@ -9,21 +9,21 @@ module GooglePlaces
   GOOGLE_API_PATH_DETAIL = "details/json"
 
   #Radius in meters
-  SEARCH_DEFAULT_RADIUS = "10000"
+  SEARCH_DEFAULT_RADIUS = "15000"
 
-  # Searching for restaurants around Av. Faria Lima x Av Rebouças, São Paulo, SP
-  SEARCH_DEFAULT_LAT = "-23.571088"
-  SEARCH_DEFAULT_LNG = "-46.690878"
+  # Searching for restaurants around Av. Brasil x Av Nove de Julho, São Paulo, SP
+  SEARCH_DEFAULT_LAT = "-23.5767319"
+  SEARCH_DEFAULT_LNG = "-46.6745702"
 
   # https://developers.google.com/places/webservice/search
-  def self.search_for_restaurant_name (restaurantName)
+  def self.search_for_restaurant_name (restaurant_name, search_latitude = SEARCH_DEFAULT_LAT, search_longitude = SEARCH_DEFAULT_LAT, search_radius = SEARCH_DEFAULT_RADIUS)
     url = "#{GOOGLE_API_HOST}#{GOOGLE_API_PATH_SEARCH}"
     params = Hash.new
     params["location"] = "#{SEARCH_DEFAULT_LAT},#{SEARCH_DEFAULT_LNG}"
     params["radius"] = SEARCH_DEFAULT_RADIUS
     params["types"] = "food"
     params["rankby"] = "prominence" #The search is for restaurants in a large area. Better to rank by prominence than radius
-    params["name"] = restaurantName
+    params["name"] = restaurant_name
     params["key"] = GOOGLE_API_KEY
     params["language"] = "pt-BR"
 
@@ -34,10 +34,10 @@ module GooglePlaces
   end
 
   # https://developers.google.com/places/webservice/search
-  def self.search_for_restaurant_detail (restaurantId)
+  def self.search_for_restaurant_detail (restaurant_id)
     url = "#{GOOGLE_API_HOST}#{GOOGLE_API_PATH_DETAIL}"
     params = Hash.new
-    params["placeid"] = restaurantId
+    params["placeid"] = restaurant_id
     params["key"] = GOOGLE_API_KEY
     params["language"] = "pt-BR"
 

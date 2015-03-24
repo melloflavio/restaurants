@@ -19,8 +19,8 @@ module Wunderlist
   end
 
 
-  def self.list_tasks_from_list (listId)
-    url = "#{WUNDERLIST_API_HOST}#{WUNDERLIST_API_PATH_TASKS}?list_id=#{listId}"
+  def self.list_tasks_from_list (list_id)
+    url = "#{WUNDERLIST_API_HOST}#{WUNDERLIST_API_PATH_TASKS}?list_id=#{list_id}"
     # params = Hash.new
     # params["list_id"] = listId
     headers = setup_headers
@@ -31,14 +31,13 @@ module Wunderlist
     return JSON.parse(response)
   end
 
-  def self.create_comment_on_task(taskId, comment)
+  def self.create_comment_on_task(task_id, comment)
     url = "#{WUNDERLIST_API_HOST}#{WUNDERLIST_API_PATH_TASK_COMMENTS}"
     params = Hash.new
-    params["task_id"] = taskId
+    params["task_id"] = task_id
     params["text"] = comment
 
     headers = setup_headers
-
     response = RestClient.post url, params.to_json, headers
 
     return JSON.parse(response)
