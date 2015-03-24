@@ -3,7 +3,7 @@ module GooglePlaces
   require 'rest_client'
   require 'json'
 
-  GOOGLE_API_KEY = "INSERT GOOGLE API KEY"
+  GOOGLE_API_KEY = ENV['GOOGLE_API_KEY']
   GOOGLE_API_HOST = "https://maps.googleapis.com/maps/api/place/"
   GOOGLE_API_PATH_SEARCH = "nearbysearch/json"
   GOOGLE_API_PATH_DETAIL = "details/json"
