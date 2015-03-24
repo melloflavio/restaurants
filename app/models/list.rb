@@ -4,6 +4,10 @@ class List
 
   field :name, :type => String
   field :wunderlist_id, :type => String
+  field :search_latitude, :type => String
+  field :search_longitude, :type => String
+  field :search_radius, :type => String
+
 
   has_many :wunderlist_restaurants
 

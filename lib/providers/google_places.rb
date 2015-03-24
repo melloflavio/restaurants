@@ -16,7 +16,7 @@ module GooglePlaces
   SEARCH_DEFAULT_LNG = "-46.6745702"
 
   # https://developers.google.com/places/webservice/search
-  def self.search_for_restaurant_name (restaurant_name, )
+  def self.search_for_restaurant_name (restaurant_name, search_latitude = SEARCH_DEFAULT_LAT, search_longitude = SEARCH_DEFAULT_LAT, search_radius = SEARCH_DEFAULT_RADIUS)
     url = "#{GOOGLE_API_HOST}#{GOOGLE_API_PATH_SEARCH}"
     params = Hash.new
     params["location"] = "#{SEARCH_DEFAULT_LAT},#{SEARCH_DEFAULT_LNG}"

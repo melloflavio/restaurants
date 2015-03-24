@@ -18,7 +18,7 @@ class WunderlistRestaurant
   end
 
   def fetch_restaurants_details_from_google
-    results = GooglePlaces::search_for_restaurant_name(self.name)
+    results = GooglePlaces::search_for_restaurant_name(self.name, self.list.search_latitude, self.list.search_longitude, self.list.search_radius)
     results = results[0..MAXIMUM_RESULTS]
     results.each do |r|
       new_rest_detail = WunderlistRestaurant.where(:wunderlist_id => r["place_id"]).first
