@@ -4,3 +4,8 @@ development:
       database: wunderlist_develop
       hosts:
         - localhost:27017
+
+production:
+  sessions:
+    default:
+      uri: <%= ENV['MONGOLAB_URI'] %>
