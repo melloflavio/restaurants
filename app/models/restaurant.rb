@@ -24,7 +24,7 @@ class Restaurant
     self.address = detail["formatted_address"]
     self.telephone = detail["formatted_phone_number"]
     self.website = detail["website"]
-    self.hours = detail.key?("opening_hours") ? detail["opening_hours"]["weekday_text"] : ""
+    self.hours = detail.key?("opening_hours") ? detail["opening_hours"]["weekday_text"].join("\n") : ""
     self.place_id = detail["place_id"]
     self.latitude = (detail.key?("geometry") && detail["geometry"].key?("location")) ? detail["geometry"]["location"]["lat"] : ""
     self.longitude = (detail.key?("geometry") && detail["geometry"].key?("location")) ?  detail["geometry"]["location"]["lng"] : ""
@@ -51,7 +51,7 @@ class Restaurant
     details << "Endereço: #{self.address}"
     details << "Telefone: #{self.telephone}"
     details << "Maps: #{self.maps_link}"
-    details << "Horário: #{self.hours}"
+    details << "\nHorário:\n #{self.hours}\n"
     details << "Website: #{self.website}"
 
     return details.join("\n")
