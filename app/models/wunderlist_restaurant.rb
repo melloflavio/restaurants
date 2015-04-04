@@ -9,7 +9,7 @@ class WunderlistRestaurant
   belongs_to :list
   has_many :restaurants
 
-  MAXIMUM_RESULTS = 1 #defines the maximum number of active Restaurants related
+  MAXIMUM_RESTAURANTS = 1 #defines the maximum number of active Restaurants related
 
   def populate_from_wunderlist_api(detail)
     self.name = detail["title"]
@@ -18,7 +18,7 @@ class WunderlistRestaurant
   end
 
   def fetch_restaurants_details_from_google
-	if self.restaurants.where(:active => true).count < MAXIMUM_RESULTS
+  if self.restaurants.where(:active => true).count < MAXIMUM_RESTAURANTS
       results = GooglePlaces::search_for_restaurant_name(self.name, search_latitude: self.list.search_latitude, search_longitude: self.list.search_longitude, search_radius: self.list.search_radius, search_types: self.list.place_types)
       results.each do |r|
         new_rest_detail = Restaurant.where(:place_id => r["place_id"]).first
