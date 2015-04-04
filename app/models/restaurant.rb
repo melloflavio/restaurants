@@ -14,6 +14,8 @@ class Restaurant
   field :location, :type => Array
   field :maps_link, :type => String
   field :sent_to_wunderlist, :type => Boolean, :default => false
+  field :wunderlist_comment_id, :type => String
+  field :active, :type => Boolean, :default => true #Marks if the restaurant has been deleted form wunderlist
 
   belongs_to :wunderlist_restaurant
 
@@ -36,8 +38,9 @@ class Restaurant
 
   def send_comment_to_wunderlist
     begin
-      Wunderlist::create_comment_on_task(self.wunderlist_restaurant.wunderlist_id.to_i, self.get_comment_string)
+      response = Wunderlist::create_comment_on_task(self.wunderlist_restaurant.wunderlist_id.to_i, self.get_comment_string)
       self.sent_to_wunderlist = true
+      self.wunderlist_comment_id = response["id"]
       self.save
     rescue Exception => ex
       puts "Error when sending restaurant #{self.name} to wunderlist: #{ex.message}"
