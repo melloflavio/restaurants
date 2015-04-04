@@ -22,9 +22,9 @@ module GooglePlaces
     options = self.populate_search_defaults(options)
     url = "#{GOOGLE_API_HOST}#{GOOGLE_API_PATH_SEARCH}"
     params = Hash.new
-    params["location"] = "#{SEARCH_DEFAULT_LAT},#{SEARCH_DEFAULT_LNG}"
-    params["radius"] = SEARCH_DEFAULT_RADIUS
-    params["types"] = "food"
+    params["location"] = "#{options[:search_latitude]},#{options[:search_longitude]}"
+    params["radius"] = options[:search_radius]
+    params["types"] = options[:search_types].join("|")
     params["rankby"] = "prominence" #The search is for restaurants in a large area. Better to rank by prominence than radius
     params["name"] = restaurant_name
     params["key"] = GOOGLE_API_KEY
