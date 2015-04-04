@@ -7,6 +7,7 @@ class List
   field :search_latitude, :type => String
   field :search_longitude, :type => String
   field :search_radius, :type => String
+  field :place_type, :type => Array #Types os places to search for. See possible values at https://developers.google.com/places/supported_types
 
 
   has_many :wunderlist_restaurants
