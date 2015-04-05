@@ -28,4 +28,13 @@ namespace :wunderlist_restaurants do
     puts "Finished comments back to wunderlist"
   end
 
+  task :pool_wunderlist_for_active => :environment do
+    puts "Pooling wunderlist to check Restaurant Status"
+    restaurants = Restaurant.where(:active => true)
+    restaurants.each do |r|
+      r.pool_wunderlist_status
+    end
+    puts "Finished updating restaurant status"
+  end
+
 end
