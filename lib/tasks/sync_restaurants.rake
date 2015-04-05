@@ -30,7 +30,7 @@ namespace :wunderlist_restaurants do
 
   task :pool_wunderlist_for_active => :environment do
     puts "Pooling wunderlist to check Restaurant Status"
-    restaurants = Restaurant.where(:active => true)
+    restaurants = Restaurant.where(:active => true, :sent_to_wunderlist => true)
     restaurants.each do |r|
       r.pool_wunderlist_status
     end
