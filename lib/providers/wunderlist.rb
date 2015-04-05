@@ -43,4 +43,21 @@ module Wunderlist
     return JSON.parse(response)
   end
 
+  def self.check_comment_existence(comment_id)
+    success = false
+    begin
+      url = "#{WUNDERLIST_API_HOST}#{WUNDERLIST_API_PATH_TASK_COMMENTS}/#{comment_id}"
+
+      headers = setup_headers
+      response = RestClient.get url, headers
+
+      success = true
+    rescue => e
+      puts "Error when checking for existence of comment = #{comment_id}"
+      success = false
+    end
+
+    return success 
+  end
+
 end
