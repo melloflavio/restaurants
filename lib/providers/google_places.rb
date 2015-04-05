@@ -9,19 +9,22 @@ module GooglePlaces
   GOOGLE_API_PATH_DETAIL = "details/json"
 
   #Radius in meters
-  SEARCH_DEFAULT_RADIUS = "15000"
+  DEFAULT_RADIUS = "15000"
 
   # Searching for restaurants around Av. Brasil x Av Nove de Julho, São Paulo, SP
-  SEARCH_DEFAULT_LAT = "-23.5767319"
-  SEARCH_DEFAULT_LNG = "-46.6745702"
+  DEFAULT_LAT = "-23.5767319"
+  DEFAULT_LNG = "-46.6745702"
+  DEFAULT_TYPES = ["restaurant"]
+
 
   # https://developers.google.com/places/webservice/search
-  def self.search_for_restaurant_name (restaurant_name, search_latitude = SEARCH_DEFAULT_LAT, search_longitude = SEARCH_DEFAULT_LAT, search_radius = SEARCH_DEFAULT_RADIUS)
+  def self.search_for_restaurant_name (restaurant_name, options = {})
+    options = self.populate_search_defaults(options)
     url = "#{GOOGLE_API_HOST}#{GOOGLE_API_PATH_SEARCH}"
     params = Hash.new
-    params["location"] = "#{SEARCH_DEFAULT_LAT},#{SEARCH_DEFAULT_LNG}"
-    params["radius"] = SEARCH_DEFAULT_RADIUS
-    params["types"] = "food"
+    params["location"] = "#{options[:search_latitude]},#{options[:search_longitude]}"
+    params["radius"] = options[:search_radius]
+    params["types"] = options[:search_types].join("|")
     params["rankby"] = "prominence" #The search is for restaurants in a large area. Better to rank by prominence than radius
     params["name"] = restaurant_name
     params["key"] = GOOGLE_API_KEY
@@ -45,6 +48,15 @@ module GooglePlaces
     parsed = JSON.parse(response)
 
     return parsed["result"]
+  end
+
+  def self.populate_search_defaults(options = {})
+     options[:search_latitude] ||= DEFAULT_LAT 
+     options[:search_longitude] ||= DEFAULT_LNG
+     options[:search_radius] ||= DEFAULT_RADIUS
+     options[:search_types] ||= DEFAULT_TYPES
+
+     return options
   end
 
 end
