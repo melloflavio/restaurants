@@ -30,6 +30,7 @@ class WunderlistRestaurant
           new_rest_detail.populate_from_google_places_detail(detail)
           self.restaurants << new_rest_detail
           new_rest_detail.save
+          break
         end
       end
     end
