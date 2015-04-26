@@ -6,6 +6,7 @@ class Restaurant
   field :name, :type => String
   field :address, :type => String
   field :telephone, :type => String
+  field :int_telephone, :type => String #Phone in international format so wunderlist will recognize it and deep link to device's phone app
   field :website, :type => String
   field :hours, :type => String
   field :place_id, :type => String #Google's placeId
@@ -26,6 +27,7 @@ class Restaurant
     self.name = detail["name"]
     self.address = detail["formatted_address"]
     self.telephone = detail["formatted_phone_number"]
+    self.int_telephone = detail["international_phone_number"]
     self.website = detail["website"]
     self.hours = detail.key?("opening_hours") ? detail["opening_hours"]["weekday_text"].join("\n") : ""
     self.place_id = detail["place_id"]
@@ -55,10 +57,10 @@ class Restaurant
     details = Array.new
     details << "Nome: #{self.name}"
     details << "Endereço: #{self.address}"
-    details << "Telefone: #{self.telephone}"
-    details << "Maps: #{self.maps_link}"
+    details << "\nTelefone: #{self.telephone}"
+    details << "\nMaps: #{self.maps_link}"
     details << "\nHorário:\n #{self.hours}\n"
-    details << "Website: #{self.website}"
+    details << "\nWebsite: #{self.website}"
 
     return details.join("\n")
   end
