@@ -6,6 +6,7 @@ class Restaurant
   field :name, :type => String
   field :address, :type => String
   field :telephone, :type => String
+  field :international_telephone, :type => String #Phone in international format so wunderlist will recognize it and deep link to device s phone app
   field :website, :type => String
   field :hours, :type => String
   field :place_id, :type => String #Google's placeId
@@ -26,6 +27,7 @@ class Restaurant
     self.name = detail["name"]
     self.address = detail["formatted_address"]
     self.telephone = detail["formatted_phone_number"]
+    self.international_telephone = detail["international_phone_number"]
     self.website = detail["website"]
     self.hours = detail.key?("opening_hours") ? detail["opening_hours"]["weekday_text"].join("\n") : ""
     self.place_id = detail["place_id"]
@@ -52,13 +54,14 @@ class Restaurant
 
   # Formats the Restaurant data to a single string which will be the body of the comment posted in wunderlist
   def get_comment_string
+    phone = self.international_telephone.blank? ? self.telephone : self.international_telephone
     details = Array.new
-    details << "Nome: #{self.name}"
-    details << "Endereço: #{self.address}"
-    details << "Telefone: #{self.telephone}"
-    details << "Maps: #{self.maps_link}"
-    details << "\nHorário:\n #{self.hours}\n"
-    details << "Website: #{self.website}"
+    details << (if self.name.blank? then "Nome: - " else "Nome: #{self.name}" end)
+    details << (if self.address.blank? then "Endereço: - " else "Endereço: #{self.address}" end)
+    details << (if phone.blank? then "\nTelefone: - " else "\nTelefone: #{phone}" end)
+    details << (if self.maps_link.blank? then "\nMaps: - " else "\nMaps: #{self.maps_link}" end)
+    details << (if self.hours.blank? then "\nHorário: - " else "\nHorário:\n #{self.hours}\n" end)
+    details << (if self.website.blank? then "\nWebsite: - " else "\nWebsite: #{self.website}" end)
 
     return details.join("\n")
   end
