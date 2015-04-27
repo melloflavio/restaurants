@@ -70,8 +70,8 @@ class Restaurant
   # This represents a feedback loop where the end user can delete comments is does not believe to be related to the restaurant entry. And the system will fetch a new one in Google API
   def pool_wunderlist_status
     if self.sent_to_wunderlist && !wunderlist_comment_id.blank? #Sanity check
-      active = Wunderlist::check_comment_existence(self.wunderlist_comment_id)
-      if !active? #Only saves when going to inactive state, otherwise subsequent active pools would keep updating the last_updated timestamp
+      active = Wunderlist::check_comment_existence(self.wunderlist_restaurant.wunderlist_id, self.wunderlist_comment_id)
+      unless active #Only saves when going to inactive state, otherwise subsequent active pools would keep updating the last_updated timestamp
         self.active = false
         self.save
       end
