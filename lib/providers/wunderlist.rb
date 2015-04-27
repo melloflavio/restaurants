@@ -43,18 +43,28 @@ module Wunderlist
     return JSON.parse(response)
   end
 
-  def self.check_comment_existence(comment_id)
+  def self.check_comment_existence(task_id, comment_id)
     success = false
     begin
-      url = "#{WUNDERLIST_API_HOST}#{WUNDERLIST_API_PATH_TASK_COMMENTS}/#{comment_id}"
+      url = "#{WUNDERLIST_API_HOST}#{WUNDERLIST_API_PATH_TASK_COMMENTS}?task_id=#{task_id}"
 
       headers = setup_headers
       response = RestClient.get url, headers
 
-      success = true
+      parsed = JSON.parse(response)
+      if parsed.respond_to?('each')
+        parsed.each do |task|
+          if task["id"] == comment_id.to_i
+            success = true
+            break
+          end
+        end
+      else
+        success = true
+      end
     rescue => e
       puts "Error when checking for existence of comment = #{comment_id}"
-      success = false
+      success = true #An error in accessing the api should not set the restaurant as inactive.
     end
 
     return success 
