@@ -19,8 +19,8 @@ module Wunderlist
   end
 
 
-  def self.list_tasks_from_list (list_id)
-    url = "#{WUNDERLIST_API_HOST}#{WUNDERLIST_API_PATH_TASKS}?list_id=#{list_id}"
+  def self.list_tasks_from_list (list_id, completed = false)
+    url = "#{WUNDERLIST_API_HOST}#{WUNDERLIST_API_PATH_TASKS}?list_id=#{list_id}&completed=#{completed}"
     # params = Hash.new
     # params["list_id"] = listId
     headers = setup_headers
@@ -29,6 +29,15 @@ module Wunderlist
     response = RestClient.get url, headers
 
     return JSON.parse(response)
+  end
+
+  # Wunderlists API only returns either the completed or not completed tasks
+  # Requests for both and merges the resulting arrays
+  def self.list_all_tasks_from_list(list_id)
+    not_completed = self.list_tasks_from_list(list_id, false)
+    completed = self.list_tasks_from_list(list_id, true)
+
+    return completed + not_completed
   end
 
   def self.create_comment_on_task(task_id, comment)
