@@ -13,7 +13,7 @@ class List
   has_many :wunderlist_restaurants
 
   def fetch_restaurants
-    restaurants = Wunderlist::list_tasks_from_list(self.wunderlist_id)
+    restaurants = Wunderlist::list_all_tasks_from_list(self.wunderlist_id)
 
     restaurants.each do |r|
       new_rest = WunderlistRestaurant.where(:wunderlist_id => r["id"]).first
