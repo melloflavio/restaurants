@@ -37,4 +37,13 @@ namespace :wunderlist_restaurants do
     puts "Finished updating restaurant status"
   end
 
+  task :pool_wunderlist_for_name => :environment do
+    puts "Begin update from google"
+    wunder_restaurants = WunderlistRestaurant.all
+    wunder_restaurants.each do |w|
+      w.pool_wunderlist_for_name_change
+    end
+    puts "Finished update from google"
+  end
+
 end
