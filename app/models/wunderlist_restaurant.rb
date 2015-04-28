@@ -36,4 +36,15 @@ class WunderlistRestaurant
     end
   end
 
+  def pool_wunderlist_for_name_change
+    # Only pools for name change unsuccessful restaurant searches
+    if self.restaurants.where(:active => true).count < MAXIMUM_RESTAURANTS
+      detail = Wunderlist::get_task_detail(self.wunderlist_id)
+      if !detail["title"].blank? && detail["title"] != self.name
+        self.name = detail["title"]
+        self.save
+      end
+    end
+  end
+
 end
