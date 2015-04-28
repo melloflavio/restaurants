@@ -79,4 +79,13 @@ module Wunderlist
     return success 
   end
 
+  def self.get_task_detail(task_id)
+    url = "#{WUNDERLIST_API_HOST}#{WUNDERLIST_API_PATH_TASKS}/#{task_id}"
+
+    headers = setup_headers
+    response = RestClient.get url, headers
+
+    return JSON.parse(response)
+  end
+
 end
