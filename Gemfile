@@ -36,7 +36,7 @@ gem 'spring',        group: :development
 # Use debugger
 # gem 'debugger', group: [:development, :test]
 
-gem "mongoid", "~> 4.0.0"
+gem "mongoid", ">= 5.0.0"
 
 gem 'google-api-client', '0.8.2'
 
