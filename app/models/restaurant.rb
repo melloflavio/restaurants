@@ -1,5 +1,6 @@
 # encoding: utf-8
 class Restaurant
+  require 'csv'
   include Mongoid::Document
   include Mongoid::Timestamps
 
@@ -66,7 +67,7 @@ class Restaurant
     return details.join("\n")
   end
 
-  # Pools wunderlist to check if comment is still present. If it  has been deleted, the restaurant should change to inactive. 
+  # Pools wunderlist to check if comment is still present. If it  has been deleted, the restaurant should change to inactive.
   # This represents a feedback loop where the end user can delete comments is does not believe to be related to the restaurant entry. And the system will fetch a new one in Google API
   def pool_wunderlist_status
     if self.sent_to_wunderlist && !wunderlist_comment_id.blank? #Sanity check
@@ -76,6 +77,21 @@ class Restaurant
         self.save
       end
     end
+  end
+
+  #To be used in CSV that's imported in Google MyMaps
+  def get_summary_array
+    phone = self.international_telephone.blank? ? self.telephone : self.international_telephone
+    details = Array.new
+    details << (if self.name.blank? then "" else "#{self.name}" end)
+    details << (if self.wunderlist_restaurant.list.name.blank? then "" else "#{self.wunderlist_restaurant.list.name}" end)
+    details << (if phone.blank? then "" else "#{phone}" end)
+    details << (if self.address.blank? then "" else "#{self.address}" end)
+    details << (if self.website.blank? then "" else "#{self.website}" end)
+    details << (if self.hours.blank? then "" else "#{self.hours}" end)
+    details << (if self.location.blank? then "" else "#{self.location}" end)
+
+    return details
   end
 
 end
