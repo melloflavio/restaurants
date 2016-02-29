@@ -1,6 +1,5 @@
 # encoding: utf-8
 class Restaurant
-  require 'csv'
   include Mongoid::Document
   include Mongoid::Timestamps
 
@@ -89,7 +88,8 @@ class Restaurant
     details << (if self.address.blank? then "" else "#{self.address}" end)
     details << (if self.website.blank? then "" else "#{self.website}" end)
     details << (if self.hours.blank? then "" else "#{self.hours}" end)
-    details << (if self.location.blank? then "" else "#{self.location}" end)
+    details << (if self.latitude.blank? then "" else "#{self.latitude}" end)
+    details << (if self.longitude.blank? then "" else "#{self.longitude}" end)
 
     return details
   end
