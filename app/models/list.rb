@@ -45,7 +45,7 @@ class List
 
 
   def write_csv
-    path = Rails.root.join('export', "#{self.name}.csv")
+    path = Rails.root.join('export', "#{self.name}.csv".tr("/",'-'))
     CSV.open(path, 'w') do |csv_object|
       csv_object << self.class.get_csv_header()
       self.wunderlist_restaurants.each do |wunder_rest|
