@@ -78,6 +78,21 @@ class Restaurant
     end
   end
 
+  def self.get_csv_header
+    header = Array.new
+    header << "Nome"
+    header << "Lista"
+    header << "Telefone"
+    header << "Endereço"
+    header << "Site"
+    header << "Horários"
+    header << "Latitude"
+    header << "Longitude"
+    header << "Novo"
+
+    return header
+  end
+
   #To be used in CSV that's imported in Google MyMaps
   def get_summary_array
     phone = self.international_telephone.blank? ? self.telephone : self.international_telephone
@@ -90,8 +105,25 @@ class Restaurant
     details << (if self.hours.blank? then "" else "#{self.hours}" end)
     details << (if self.latitude.blank? then "" else "#{self.latitude}" end)
     details << (if self.longitude.blank? then "" else "#{self.longitude}" end)
+    details << (if self.hours.blank? then "" else "#{self.hours}" end)
+    details << (if self.is_new_restaurant? then "Sim" else "Não" end)
 
     return details
+  end
+
+  def is_new_restaurant
+    return (if (self.wunderlist_restaurant.list.has_new_rests && !self.wunderlist_restaurant.completed) then true else false end)
+  end
+
+  def self.write_rests_csv
+    path = Rails.root.join('export', "rests.csv")
+    CSV.open(path, 'w') do |csv_object|
+      csv_object << self.class.get_csv_header()
+
+      Restaurant.all.each do |r|
+        csv_object << r.get_summary_array()
+      end
+    end
   end
 
 end

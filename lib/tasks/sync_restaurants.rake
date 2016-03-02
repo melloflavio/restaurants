@@ -48,8 +48,7 @@ namespace :wunderlist_restaurants do
 
   task :generate_csv => :environment do
     puts "Begin csv generation"
-    List.write_new_rests_csv()
-    List.write_old_rests_csv
+    Restaurant.write_rests_csv()
     puts "Finished csv generation"
   end
 
