@@ -38,12 +38,29 @@ namespace :wunderlist_restaurants do
   end
 
   task :pool_wunderlist_for_name => :environment do
-    puts "Begin update from google"
+    puts "Begin update for wunderlist name"
     wunder_restaurants = WunderlistRestaurant.all
     wunder_restaurants.each do |w|
-      w.pool_wunderlist_for_name_change
+      begin
+        w.pool_wunderlist_for_name_change
+      rescue
+        puts "Error pooling wunder_rest id = #{w.wunderlist_id}"
+      end
     end
-    puts "Finished update from google"
+    puts "Finished update for wunderlist name"
+  end
+
+  task :pool_wunderlist_for_completion => :environment do
+    puts "Begin update for completion"
+    wunder_restaurants = WunderlistRestaurant.all
+    wunder_restaurants.each do |w|
+      begin
+        w.pool_wunderlist_for_completion
+      rescue
+        puts "Error pooling wunder_rest id = #{w.wunderlist_id}"
+      end
+    end
+    puts "Finished update for completion"
   end
 
   task :generate_csv => :environment do
