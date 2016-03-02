@@ -44,15 +44,47 @@ class List
   end
 
 
-  def write_csv
-    path = Rails.root.join('export', "#{self.name}.csv".tr("/",'-'))
+  def self.write_new_rests_csv
+    path = Rails.root.join('export', "new_rests.csv")
     CSV.open(path, 'w') do |csv_object|
       csv_object << self.class.get_csv_header()
-      self.wunderlist_restaurants.each do |wunder_rest|
-        wunder_rest.restaurants.where(:active => true).each do |rest|
-          csv_object << rest.get_summary_array()
+
+      #gets the non completed, valid restaurants from the lists flagged as new
+      List.where(:has_new_rests => true).each do |l|
+        l.wunderlist_restaurants.where(:completed => false).each do |w|
+          w.restaurants.where(:active => true).each do |rest|
+            csv_object << rest.get_summary_array()
+          end
         end
       end
     end
   end
+
+
+  def self.write_old_rests_csv
+    path = Rails.root.join('export', "old_rests.csv")
+    CSV.open(path, 'w') do |csv_object|
+      csv_object << self.class.get_csv_header()
+
+      #gets the completed, valid restaurants from the lists flagged as new
+      List.where(:has_new_rests => true).each do |l|
+        l.wunderlist_restaurants.where(:completed => true).each do |w|
+          w.restaurants.where(:active => true).each do |rest|
+            csv_object << rest.get_summary_array()
+          end
+        end
+      end
+
+      #gets the valid restaurants from the lists flagged as old
+      List.where(:has_new_rests => false).each do |l|
+        l.wunderlist_restaurants.all.each do |w|
+          w.restaurants.where(:active => true).each do |rest|
+            csv_object << rest.get_summary_array()
+          end
+        end
+      end
+
+    end
+  end
+
 end

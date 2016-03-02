@@ -49,4 +49,13 @@ class WunderlistRestaurant
     end
   end
 
+  def pool_wunderlist_for_completion
+    # Only pools for name change unsuccessful restaurant searches
+    detail = Wunderlist::get_task_detail(self.wunderlist_id)
+    if !detail["completed"].blank? && detail["completed"] != self.completed
+      self.completed = detail["completed"]
+      self.save
+    end
+  end
+
 end
