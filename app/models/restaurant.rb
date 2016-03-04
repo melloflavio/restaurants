@@ -121,7 +121,7 @@ class Restaurant
       csv_object << self.get_csv_header()
 
       Restaurant.where(:active => true).each do |r|
-        unless (r.wunderlist_restaurant.completed)
+        unless (r.wunderlist_restaurant.completed) #Completed rests that are worthy are placed on one of the "Been there" lists
           csv_object << r.get_summary_array()
         end
       end
