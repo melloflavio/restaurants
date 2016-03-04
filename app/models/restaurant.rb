@@ -106,7 +106,7 @@ class Restaurant
     details << (if self.hours.blank? then "" else "#{self.hours}" end)
     details << (if self.latitude.blank? then "" else "#{self.latitude}" end)
     details << (if self.longitude.blank? then "" else "#{self.longitude}" end)
-    details << (if self.is_new_restaurant() then "Já Fui" else "Não fui" end)
+    details << (if self.is_new_restaurant() then "Não fui" else "Já Fui" end)
 
     return details
   end
