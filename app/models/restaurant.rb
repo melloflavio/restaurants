@@ -1,5 +1,6 @@
 # encoding: utf-8
 class Restaurant
+  require 'csv'
   include Mongoid::Document
   include Mongoid::Timestamps
 
@@ -66,7 +67,7 @@ class Restaurant
     return details.join("\n")
   end
 
-  # Pools wunderlist to check if comment is still present. If it  has been deleted, the restaurant should change to inactive. 
+  # Pools wunderlist to check if comment is still present. If it  has been deleted, the restaurant should change to inactive.
   # This represents a feedback loop where the end user can delete comments is does not believe to be related to the restaurant entry. And the system will fetch a new one in Google API
   def pool_wunderlist_status
     if self.sent_to_wunderlist && !wunderlist_comment_id.blank? #Sanity check
@@ -74,6 +75,55 @@ class Restaurant
       unless active #Only saves when going to inactive state, otherwise subsequent active pools would keep updating the last_updated timestamp
         self.active = false
         self.save
+      end
+    end
+  end
+
+  def self.get_csv_header
+    header = Array.new
+    header << "Nome"
+    header << "Lista"
+    header << "Telefone"
+    header << "Endereço"
+    header << "Site"
+    header << "Horários"
+    header << "Latitude"
+    header << "Longitude"
+    header << "Novo"
+
+    return header
+  end
+
+  #To be used in CSV that's imported in Google MyMaps
+  def get_summary_array
+    phone = self.international_telephone.blank? ? self.telephone : self.international_telephone
+    details = Array.new
+    details << (if self.name.blank? then "" else "#{self.name}" end)
+    details << (if self.wunderlist_restaurant.list.name.blank? then "" else "#{self.wunderlist_restaurant.list.name}" end)
+    details << (if phone.blank? then "" else "#{phone}" end)
+    details << (if self.address.blank? then "" else "#{self.address}" end)
+    details << (if self.website.blank? then "" else "#{self.website}" end)
+    details << (if self.hours.blank? then "" else "#{self.hours}" end)
+    details << (if self.latitude.blank? then "" else "#{self.latitude}" end)
+    details << (if self.longitude.blank? then "" else "#{self.longitude}" end)
+    details << (if self.is_new_restaurant() then "Já Fui" else "Não fui" end)
+
+    return details
+  end
+
+  def is_new_restaurant
+    return (if (self.wunderlist_restaurant.list.has_new_rests) then true else false end)
+  end
+
+  def self.write_rests_csv
+    path = Rails.root.join('export', "rests-#{Time.now.strftime("%Y-%m-%d")}.csv")
+    CSV.open(path, 'w') do |csv_object|
+      csv_object << self.get_csv_header()
+
+      Restaurant.where(:active => true).each do |r|
+        unless (r.wunderlist_restaurant.completed)
+          csv_object << r.get_summary_array()
+        end
       end
     end
   end

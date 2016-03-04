@@ -1,4 +1,6 @@
+# encoding: utf-8
 class List
+  require 'csv'
   include Mongoid::Document
   include Mongoid::Timestamps
 
@@ -8,7 +10,7 @@ class List
   field :search_longitude, :type => String
   field :search_radius, :type => String
   field :place_types, :type => Array #Types os places to search for. See possible values at https://developers.google.com/places/supported_types
-
+  field :has_new_rests, :type => Boolean, :default => false #Marks if the lists consists of restaurants that I have already been to or not
 
   has_many :wunderlist_restaurants
 
@@ -26,4 +28,5 @@ class List
 
     end
   end
+
 end
