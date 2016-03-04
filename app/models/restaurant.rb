@@ -116,7 +116,7 @@ class Restaurant
   end
 
   def self.write_rests_csv
-    path = Rails.root.join('export', "rests.csv")
+    path = Rails.root.join('export', "rests-#{Time.now.strftime("%Y-%m-%d")}.csv")
     CSV.open(path, 'w') do |csv_object|
       csv_object << self.get_csv_header()
 
