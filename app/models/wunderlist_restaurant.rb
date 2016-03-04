@@ -5,6 +5,7 @@ class WunderlistRestaurant
   field :name, :type => String
   field :wunderlist_id, :type => String
   field :list_id, :type => String
+  field :completed, :type => Boolean, :default => false
 
   belongs_to :list
   has_many :restaurants
@@ -16,6 +17,7 @@ class WunderlistRestaurant
     self.name = detail["title"]
     self.wunderlist_id = detail["id"]
     self.list_id = detail["list_id"]
+    self.completed = detail["completed"]
   end
 
   # Fetches a restaurant from Google's api using the restaurant name and other list data such as Lat/Lng
@@ -44,6 +46,15 @@ class WunderlistRestaurant
         self.name = detail["title"]
         self.save
       end
+    end
+  end
+
+  def pool_wunderlist_for_completion
+    # Only pools for name change unsuccessful restaurant searches
+    detail = Wunderlist::get_task_detail(self.wunderlist_id)
+    if !detail["completed"].blank? && detail["completed"] != self.completed
+      self.completed = detail["completed"]
+      self.save
     end
   end
 
