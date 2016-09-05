@@ -54,6 +54,12 @@ class WunderlistRestaurant
     detail = Wunderlist::get_task_detail(self.wunderlist_id)
     if !detail["completed"].blank? && detail["completed"] != self.completed
       self.completed = detail["completed"]
+
+      self.restaurants.each do |r| #Trickling down "Completed" info to the Restaurant object to improve WS performance
+        r.wunderlist_completed = self.completed
+        r.save
+      end
+
       self.save
     end
   end
