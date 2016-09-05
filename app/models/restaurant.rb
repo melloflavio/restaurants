@@ -18,8 +18,11 @@ class Restaurant
   field :sent_to_wunderlist, :type => Boolean, :default => false
   field :wunderlist_comment_id, :type => String
   field :active, :type => Boolean, :default => true #Marks if the restaurant has been deleted form wunderlist
+  field :wunderlist_completed, :type => Boolean, :default => false #Marks if the restaurant has been completed in wunderlist. Completed rests that are worthy are placed on one of the "Been there" lists
 
   belongs_to :wunderlist_restaurant
+
+  index ({active: 1, wunderlist_completed: 1})
 
   # index [[ :location, Mongo::GEO2D ]], min: -200.0, max: 200.0
 
@@ -120,12 +123,23 @@ class Restaurant
     CSV.open(path, 'w') do |csv_object|
       csv_object << self.get_csv_header()
 
-      Restaurant.where(:active => true).each do |r|
-        unless (r.wunderlist_restaurant.completed) #Completed rests that are worthy are placed on one of the "Been there" lists
-          csv_object << r.get_summary_array()
-        end
+      Restaurant.where(:active => true, :wunderlist_completed => false).each do |r|
+        csv_object << r.get_summary_array()
       end
     end
+  end
+
+  def to_dto
+    dto = Hash.new
+    dto["name"] = self.name
+    dto["address"] = self.address
+    dto["telephone"] = self.telephone
+    dto["website"] = self.website
+    dto["hours"] = self.hours
+    dto["lat_lng"] = self.location
+    dto["maps_link"] = self.maps_link
+    # dto["is_new"] = self.is_new_restaurant() //TODO - Save is New rest data in the restaurant object to improve performance on the WS response.
+    return dto
   end
 
 end
