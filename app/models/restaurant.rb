@@ -136,8 +136,9 @@ class Restaurant
     dto["telephone"] = self.telephone
     dto["website"] = self.website
     dto["hours"] = self.hours
-    dto["lat_lng"] = self.location
-    dto["maps_link"] = self.maps_link
+    dto["latitude"] = self.latitude.to_f
+    dto["longitude"] = self.longitude.to_f
+    dto["mapsLink"] = self.maps_link
     # dto["is_new"] = self.is_new_restaurant() //TODO - Save is New rest data in the restaurant object to improve performance on the WS response.
     return dto
   end
