@@ -141,7 +141,7 @@ class Restaurant
     dto["latitude"] = self.latitude.to_f
     dto["longitude"] = self.longitude.to_f
     dto["mapsLink"] = self.maps_link
-    dto["is_new"] = self.is_new
+    dto["isNew"] = self.is_new
     return dto
   end
 
