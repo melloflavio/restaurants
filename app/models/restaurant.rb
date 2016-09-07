@@ -19,6 +19,7 @@ class Restaurant
   field :wunderlist_comment_id, :type => String
   field :active, :type => Boolean, :default => true #Marks if the restaurant has been deleted form wunderlist
   field :wunderlist_completed, :type => Boolean, :default => false #Marks if the restaurant has been completed in wunderlist. Completed rests that are worthy are placed on one of the "Been there" lists
+  field :is_new, :type => Boolean, :default => false # Indicates whether a restaurant is new or not, based on the list it belongs to.
 
   belongs_to :wunderlist_restaurant
 
@@ -41,6 +42,7 @@ class Restaurant
     #Encoding the name. The final ) is encoded by hand as %29. If it is not encoded, wunderlist won't recognise it as part of the link
     #If used URI::Encode on the whole string, %29 gets double encoded as %2529 and it does not work properly
     self.maps_link = "http://maps.google.com/maps?daddr=#{self.latitude},#{self.longitude}%20(#{URI::encode(self.name)}%29"
+    self.is_new = self.is_new_restaurant()
   end
 
   # Sends the restaurant to wunderlist in the form of a comment in the related restaurant entry
@@ -139,7 +141,7 @@ class Restaurant
     dto["latitude"] = self.latitude.to_f
     dto["longitude"] = self.longitude.to_f
     dto["mapsLink"] = self.maps_link
-    # dto["is_new"] = self.is_new_restaurant() //TODO - Save is New rest data in the restaurant object to improve performance on the WS response.
+    dto["is_new"] = self.is_new
     return dto
   end
 
